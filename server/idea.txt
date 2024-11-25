@@ -1,2 +1,0 @@
-//install postgres with docker compose
-//use postgres ui with docker
