@@ -1,26 +1,43 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
+import { Signupdto} from './dto/create-auth.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
+import {PrismaService} from "../db/prisma.service";
+import * as bcrypt from 'bcrypt';
+
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  //create() {
+ //   return 'This action adds a new auth';
+ // }
+
+
+
+  constructor(private prisma: PrismaService) {
+
   }
 
-  findAll() {
-    return `This action returns all auth`;
+  async signup(newUser:Signupdto) {
+    const randomUUID= crypto.randomUUID();
+    const salt= await bcrypt.genSalt(10);
+    const hashed_api_key=await bcrypt.hash(randomUUID,salt);
+    const password= await bcrypt.hash(newUser.password,salt)
+
+
+    //generate api key
+    return this.prisma.user.create({
+      data: {...newUser,password:password, api_key: hashed_api_key},
+      select: {
+        id: true,
+        email: true,
+        api_key: true,
+        createdAt: true,
+        updatedAt: true
+      },
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
+  async getAccessToken() {
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
   }
 }
