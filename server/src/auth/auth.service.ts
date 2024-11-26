@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, UnauthorizedException} from '@nestjs/common';
 import { Signupdto} from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import {PrismaService} from "../db/prisma.service";
 import * as bcrypt from 'bcrypt';
+import {Logindto} from "./dto/login.dto";
 
 
 @Injectable()
@@ -20,13 +20,12 @@ export class AuthService {
   async signup(newUser:Signupdto) {
     const randomUUID= crypto.randomUUID();
     const salt= await bcrypt.genSalt(10);
-    const hashed_api_key=await bcrypt.hash(randomUUID,salt);
     const password= await bcrypt.hash(newUser.password,salt)
 
 
     //generate api key
     return this.prisma.user.create({
-      data: {...newUser,password:password, api_key: hashed_api_key},
+      data: {...newUser,password:password, api_key: randomUUID},
       select: {
         id: true,
         email: true,
@@ -37,7 +36,23 @@ export class AuthService {
     })
   }
 
-  async getAccessToken() {
+  async login(loginedUser:Logindto):Promise<{api_key:string}>{
+    const foundUser= await this.prisma.user.findFirst({
+      where: {email: loginedUser.email},
+    });
+    if(foundUser){
+      const passOk = await bcrypt.compare(loginedUser.password, foundUser.password);
+      if (passOk) {
+        return {api_key:foundUser.api_key};
+      } else {
+        throw new UnauthorizedException("You do not have access");
+      }
+    }
+    else{
+      throw new UnauthorizedException("Please check your email");
+    }
+
+
 
   }
 }
