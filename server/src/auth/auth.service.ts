@@ -1,58 +1,69 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
-import { Signupdto} from './dto/create-auth.dto';
+import {Injectable, UnauthorizedException,ConflictException,InternalServerErrorException} from '@nestjs/common';
+import {Signupdto} from './dto/create-auth.dto';
 import {PrismaService} from "../db/prisma.service";
 import * as bcrypt from 'bcrypt';
 import {Logindto} from "./dto/login.dto";
+import {UsersService} from "../users/users.service";
+import {JwtService} from '@nestjs/jwt';
 
 
 @Injectable()
 export class AuthService {
-  //create() {
- //   return 'This action adds a new auth';
- // }
 
+    constructor(private prisma: PrismaService, private usersService: UsersService, private jwtService: JwtService) {
 
-
-  constructor(private prisma: PrismaService) {
-
-  }
-
-  async signup(newUser:Signupdto) {
-    const randomUUID= crypto.randomUUID();
-    const salt= await bcrypt.genSalt(10);
-    const password= await bcrypt.hash(newUser.password,salt)
-
-
-    //generate api key
-    return this.prisma.user.create({
-      data: {...newUser,password:password, api_key: randomUUID},
-      select: {
-        id: true,
-        email: true,
-        api_key: true,
-        createdAt: true,
-        updatedAt: true
-      },
-    })
-  }
-
-  async login(loginedUser:Logindto):Promise<{api_key:string}>{
-    const foundUser= await this.prisma.user.findFirst({
-      where: {email: loginedUser.email},
-    });
-    if(foundUser){
-      const passOk = await bcrypt.compare(loginedUser.password, foundUser.password);
-      if (passOk) {
-        return {api_key:foundUser.api_key};
-      } else {
-        throw new UnauthorizedException("You do not have access");
-      }
-    }
-    else{
-      throw new UnauthorizedException("Please check your email");
     }
 
+    async signup(newUser: Signupdto) {
+        //obtain user newUser
+        //hash password
+
+            const saltRounds = await bcrypt.genSalt(10);
+            const hashed_password = bcrypt.hashSync(newUser.password, saltRounds);
+        try {
+            const createdUser = await this.prisma.user.create({
+                data: {...newUser, password: hashed_password},
+                select: {
+                    id: true,
+                    email: true,
+                    createdAt: true,
+                    updatedAt: true
+                },
+            })
+            console.log("createdUser",createdUser)  ;
+        } catch (error) {
+            console.log(error.code)  ;
+            if (error.code === "P2002"){
+               throw new ConflictException("User with the same email already exists");
+            }
+            throw new InternalServerErrorException('An unexpected error occurred');
+
+        }
+
+}
 
 
-  }
+
+
+    async login(loginedUser:Logindto) {
+        const foundUser = await this.prisma.user.findFirst({
+            where: {email: loginedUser.email},
+        });
+        if (foundUser) {
+            const passOk = await bcrypt.compare(loginedUser.password, foundUser.password);
+        if (passOk) {
+            return true;
+        } else {
+            throw new UnauthorizedException("You do not have access");
+        }
+    } else {
+        throw new UnauthorizedException("Please check your email");
+    }
+
+//login successfull
+    // return {
+    //   access_token: await this.jwtService.signAsync(payload),
+    //  };
+
+}
 }

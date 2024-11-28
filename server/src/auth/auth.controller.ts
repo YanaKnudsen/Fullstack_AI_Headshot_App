@@ -9,6 +9,7 @@ export class AuthController {
 
   @Post("/signup")
   async signup(@Body() newUser: Signupdto) {
+    console.log(newUser);
     return this.authService.signup(newUser);
   }
   @Post("/login")
