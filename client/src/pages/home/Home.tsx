@@ -1,6 +1,8 @@
 import './Home.scss'
-import cursorgif from '../../assets/cursor.gif'
-import arrowgif from '../../assets/arrow.gif'
+import cursorgif from '../../assets/images/cursor.gif'
+import arrowgif from '../../assets/images/arrow.gif'
+import {Link} from "react-router-dom";
+import {Button} from "../../assets/UI/buttonNew.tsx";
 
 function Home() {
 
@@ -26,10 +28,11 @@ function Home() {
                     LinkedIn profiles, resumes, or business websites—no professional photography needed.
                 </div>
                 <div className="animatedButton">
-                    <div className="button">Generate</div>
-                    <div className="cursorGIF">
-                        <img src={cursorgif} style={{width:"100%",height:"100%"}} />
-                    </div>
+                    <Button>Click</Button>
+                    {/*<div className="button">
+                        <Link className="buttonText" to="/auth/login">Generate</Link>
+                    </div>*/}
+
                 </div>
             </div>
 

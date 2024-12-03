@@ -17,7 +17,6 @@ export class AuthService {
     async signup(newUser: Signupdto) {
         //obtain user newUser
         //hash password
-
             const saltRounds = await bcrypt.genSalt(10);
             const hashed_password = bcrypt.hashSync(newUser.password, saltRounds);
         try {
@@ -28,9 +27,9 @@ export class AuthService {
                     email: true,
                     createdAt: true,
                     updatedAt: true
+
                 },
             })
-            console.log("createdUser",createdUser)  ;
         } catch (error) {
             console.log(error.code)  ;
             if (error.code === "P2002"){
@@ -46,7 +45,7 @@ export class AuthService {
 
 
     async login(loginedUser:Logindto) {
-        const foundUser = await this.prisma.user.findFirst({
+      /*  const foundUser = await this.prisma.user.findFirst({
             where: {email: loginedUser.email},
         });
         if (foundUser) {
@@ -64,6 +63,6 @@ export class AuthService {
     // return {
     //   access_token: await this.jwtService.signAsync(payload),
     //  };
-
+*/
 }
 }

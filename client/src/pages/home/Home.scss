@@ -25,7 +25,7 @@ $second-color: #8DD8E8;
     background-color: white;
     grid-area: 2/2/6/5;
     border-radius: 10px;
-    background-image: url(../../assets/photo.JPG);
+    background-image: url(../../assets/images/photo.JPG);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -36,7 +36,7 @@ $second-color: #8DD8E8;
     grid-column-start: 3;
     grid-area: 5/4/9/7;
     border-radius: 10px;
-    background-image: url(../../assets/profheadshot.png);
+    background-image: url(../../assets/images/profheadshot.png);
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -60,14 +60,10 @@ $second-color: #8DD8E8;
     color: $second-color;
   }
   .animatedButton{
-    width: 40%;
-    height: 10%;
-    display: grid;
-    grid-template-rows: 30% 30% 30%;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 30%;
+    display: flex;
   }
   .button{
-    grid-area: 1/1/3/4;
     background: $first-color;
     padding: 5px 20px;
     border-radius: 10px;
@@ -76,6 +72,10 @@ $second-color: #8DD8E8;
     display: flex;
     justify-content: center;
     align-items: center;
+    .buttonText{
+      text-decoration: none;
+      color: white;
+    }
   }
   .cursorGIF{
     grid-area: 2/3/-1/-1;

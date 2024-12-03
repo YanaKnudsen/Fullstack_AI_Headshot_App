@@ -1,0 +1,13 @@
+$base-color: #050A30;
+$first-color:#587DFA;
+$second-color: #8DD8E8;
+.InputField{
+  width: 100%;
+  background-color: magenta;
+  display: flex;
+  flex-direction: column;
+  .input{
+    background-color: $first-color;
+    border-radius: 7px;
+  }
+}

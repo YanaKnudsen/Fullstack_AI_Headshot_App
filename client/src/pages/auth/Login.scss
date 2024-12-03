@@ -1,0 +1,34 @@
+$base-color: #050A30;
+$first-color:#587DFA;
+$second-color: #8DD8E8;
+.loginPage{
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .loginField{
+    background-color:$first-color;
+    height: 60%;
+    aspect-ratio: 1/1.5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 10px;
+    .header{
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: $second-color;
+      padding: 5px 5px;
+      font-size: 1.7rem;
+      font-weight: 600;
+    }
+    .input{
+      width: 100%;
+      background-color: magenta;
+    }
+  }
+}

@@ -12,11 +12,11 @@ export class AuthController {
     console.log(newUser);
     return this.authService.signup(newUser);
   }
-  @Post("/login")
+  /*@Post("/login")
   async login(@Body() loginedUser: Logindto) {
     console.log("Body:", loginedUser)
     return this.authService.login(loginedUser);
-  }
+  }*/
 
 
 }
